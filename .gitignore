@@ -7,6 +7,16 @@
 *.userosscache
 *.sln.docstates
 
+# Unity3D generated meta files
+*.pidb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
