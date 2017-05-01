@@ -7,6 +7,7 @@ using System.Collections;
 public class AimingController : MonoBehaviour
 {
 	#region Components
+	public Transform cameraRig;
 	public Animator characterAnimatorController;
 	private Rigidbody rb;
 	#endregion
@@ -51,8 +52,13 @@ public class AimingController : MonoBehaviour
 		//rb.MoveRotation(Quaternion.Euler(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -30f, 30f))); 
 		#endregion
 
-		#region Movement		
-		rb.velocity = new Vector3( Input.GetAxis("Vertical") * moveSpeed.x, 0f, Input.GetAxis("Horizontal") * moveSpeed.z);
+		#region Movement
+		
+		Vector3 vel = new Vector3(Input.GetAxis("Horizontal") * moveSpeed.x, 0f, Input.GetAxis("Vertical") * moveSpeed.z);
+		vel = cameraRig.TransformDirection(vel);		
+		rb.velocity = vel;		
+		
+		Debug.DrawRay(transform.position, vel, Color.cyan);
 		#endregion
 	}
 
