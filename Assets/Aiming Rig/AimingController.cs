@@ -49,14 +49,13 @@ public class AimingController : MonoBehaviour
 		targetVerticalAngle = Mathf.Clamp01(targetVerticalAngle + Input.GetAxis("Mouse Y") * aimingSensitivity.y);
 		verticalAngle = Mathf.Lerp(verticalAngle, targetVerticalAngle, .3f);
 		transform.Rotate(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -30f, 30f));
-		//rb.MoveRotation(Quaternion.Euler(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -30f, 30f))); 
 		#endregion
 
 		#region Movement
 		
-		Vector3 vel = new Vector3(Input.GetAxis("Horizontal") * moveSpeed.x, 0f, Input.GetAxis("Vertical") * moveSpeed.z);
+		Vector3 vel = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")).normalized;
 		vel = cameraRig.TransformDirection(vel);		
-		rb.velocity = vel;		
+		rb.velocity = new Vector3 (vel.x * moveSpeed.x, 0f, vel.z * moveSpeed.z);
 		
 		Debug.DrawRay(transform.position, vel, Color.cyan);
 		#endregion
