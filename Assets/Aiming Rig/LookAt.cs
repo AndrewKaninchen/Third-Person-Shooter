@@ -9,7 +9,7 @@ public class LookAt : MonoBehaviour {
 	public bool drawSightLine;
 
 	void LateUpdate () {
-		transform.LookAt(target, transform.up);		
+		transform.LookAt(target, Vector3.up);		
 	}
 
 	private void OnDrawGizmos()

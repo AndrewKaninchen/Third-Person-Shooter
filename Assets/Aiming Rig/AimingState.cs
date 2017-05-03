@@ -4,7 +4,7 @@ using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 
-public class AimingController : MonoBehaviour
+public class AimingState : MonoBehaviour
 {
 	#region Components
 	public Transform cameraRig;
@@ -52,7 +52,10 @@ public class AimingController : MonoBehaviour
 		#endregion
 
 		#region Movement
-		
+
+		characterAnimatorController.SetFloat("MoveHorizontal", Input.GetAxis("Horizontal"));
+		characterAnimatorController.SetFloat("MoveVertical", Input.GetAxis("Vertical"));
+
 		Vector3 vel = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")).normalized;
 		vel = cameraRig.TransformDirection(vel);		
 		rb.velocity = new Vector3 (vel.x * moveSpeed.x, 0f, vel.z * moveSpeed.z);
