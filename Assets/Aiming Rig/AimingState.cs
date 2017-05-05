@@ -4,7 +4,8 @@ using System.Collections;
 
 [RequireComponent(typeof(Animator))]
 
-public class AimingState : MonoBehaviour
+
+public class AimingState : StateMachineTry.State
 {
 	#region Components
 	public Transform cameraRig;
@@ -46,9 +47,13 @@ public class AimingState : MonoBehaviour
 		#endregion
 
 		#region Rotation
-		targetVerticalAngle = Mathf.Clamp01(targetVerticalAngle + Input.GetAxis("Mouse Y") * aimingSensitivity.y);
-		verticalAngle = Mathf.Lerp(verticalAngle, targetVerticalAngle, .3f);
-		transform.Rotate(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -30f, 30f));
+		if(Cursor.lockState == CursorLockMode.Locked)
+		{
+			targetVerticalAngle = Mathf.Clamp01(targetVerticalAngle + Input.GetAxis("Mouse Y") * aimingSensitivity.y);
+			verticalAngle = Mathf.Lerp(verticalAngle, targetVerticalAngle, .3f);
+			transform.Rotate(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -30f, 30f));
+		}
+		
 		#endregion
 
 		#region Movement
@@ -66,9 +71,12 @@ public class AimingState : MonoBehaviour
 
 	void OnAnimatorIK()
 	{
-		#region Position Aiming Rig		
-		aimingRigAnimatorController.Play("Vertical Aiming", 0, verticalAngle);
-		aimingRigAnimatorController.Update(Time.deltaTime);
+		#region Position Aiming Rig
+		if (Cursor.lockState == CursorLockMode.Locked)
+		{
+			aimingRigAnimatorController.Play("Vertical Aiming", 0, verticalAngle);
+			aimingRigAnimatorController.Update(Time.deltaTime);
+		}
 		//Forcing the Aiming Rig Animator to Update before setting the IK positions to avoid lag.
 		#endregion
 

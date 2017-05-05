@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace StateMachineTry
-{
+{	
 	public class StateMachineController : MonoBehaviour
 	{
-
-		public State[] states;
-		//public State startingState;
+		public State[] states;		
+		public State startingState;
 		//private State currentState;
 
 		public void Start()

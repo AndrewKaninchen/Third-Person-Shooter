@@ -4,12 +4,9 @@ using System.Reflection;
 
 namespace StateMachineTry
 {
-
 	[CustomEditor(typeof(State), true)]
 	public class StateEditor : Editor
 	{
-		private SerializedObject so;
-
 		public static void DrawCustomEditor(State state, SerializedObject so)
 		{
 			SerializedProperty prop;
@@ -17,6 +14,7 @@ namespace StateMachineTry
 			#region Draw State's Properties		
 			prop = so.GetIterator();
 			prop.Next(true);
+			prop.NextVisible(false);			
 
 			while (prop.NextVisible(false))
 			{
@@ -25,12 +23,6 @@ namespace StateMachineTry
 			#endregion
 
 			EditorUtility.SetDirty(state);
-		}
-
-		private void OnEnable()
-		{
-			if (so == null)
-				so = new SerializedObject(target);
-		}
+		}		
 	}
 }

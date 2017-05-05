@@ -5,8 +5,7 @@ namespace StateMachineTry
 {
 	[CustomEditor(typeof(StateMachineController))]
 	public class StateMachineControllerEditor : Editor
-	{
-		SerializedObject so;
+	{		
 		SerializedObject[] stateSOs;
 		StateMachineController controller;
 		bool[] fold;
@@ -16,23 +15,28 @@ namespace StateMachineTry
 		{
 			controller = target as StateMachineController;
 			fold = new bool[controller.states.Length];
-			if (so == null) so = new SerializedObject(controller);
-			if (stateSOs == null) stateSOs = new SerializedObject[controller.states.Length];
-			for (int i = 0; i < controller.states.Length; i++)
-			{
-				stateSOs[i] = new SerializedObject(controller.states[i]);
-			}
-			controller.states = controller.GetComponents<State>();
-			foreach (State state in controller.states)
-			{
-				state.hideFlags = HideFlags.None;
-				//state.hideFlags = HideFlags.HideInInspector;
-			}
+			controller.states = controller.GetComponents<State>();			
 		}
 
 		public override void OnInspectorGUI()
 		{
-			EditorGUILayout.PropertyField(so.FindProperty("startingState"));
+			serializedObject.Update();
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("startingState"));
+			serializedObject.ApplyModifiedProperties();
+
+			#region Updating State Lists
+			controller.states = controller.GetComponents<State>();
+			stateSOs = new SerializedObject[controller.states.Length];
+
+			for (int i = 0; i < controller.states.Length; i++)
+			{
+				stateSOs[i] = new SerializedObject(controller.states[i]);
+			}
+			foreach (State state in controller.states)
+			{
+				state.hideFlags = HideFlags.HideInInspector;
+			} 
+			#endregion
 
 			#region Dealing with the Foldouts
 			int curStatesLenght = controller.states.Length;
@@ -48,23 +52,26 @@ namespace StateMachineTry
 			oldStatesLenght = curStatesLenght;
 			#endregion
 
-			EditorGUI.indentLevel++;
-			for (int i = 0; i < controller.states.Length; i++)
-			{
-				fold[i] = EditorGUILayout.Foldout(fold[i], controller.states[i].GetType().Name);
-				if (fold[i])
+			#region Sub-Editors
+			for (int i = 0; i < curStatesLenght; i++)
+			{			
+				GUIStyle style = new GUIStyle(GUIStyle.none);
+				style.padding.top += 5;
+				style.padding.bottom += 5;		
+
+				using (var v = new EditorGUILayout.VerticalScope(style))
 				{
-					GUIStyle style = new GUIStyle(GUIStyle.none);
-					style.padding.top += 5;
-					style.padding.bottom += 5;
-					using (var v = new EditorGUILayout.VerticalScope(style))
-					{
-						GUI.Box(EditorGUI.IndentedRect(v.rect), "");
+					GUI.Box(EditorGUI.IndentedRect(v.rect), "");
+						
+					stateSOs[i].Update();
+					fold[i] = EditorGUILayout.InspectorTitlebar(fold[i], stateSOs[i].targetObject, true);
+					if(fold[i])
 						StateEditor.DrawCustomEditor(controller.states[i], stateSOs[i]);
-					}
+					stateSOs[i].ApplyModifiedProperties();
 				}
+				EditorGUILayout.Space();
 			}
-			EditorGUI.indentLevel--;
+			#endregion			
 		}
 	}
 }
