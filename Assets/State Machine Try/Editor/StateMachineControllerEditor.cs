@@ -13,9 +13,8 @@ namespace StateMachineTry
 
 		void OnEnable()
 		{
-			controller = target as StateMachineController;
-			fold = new bool[controller.states.Length];
-			controller.states = controller.GetComponents<State>();			
+			if (controller == null) controller = target as StateMachineController;
+			if (fold == null) fold = new bool[controller.states.Length];
 		}
 
 		public override void OnInspectorGUI()

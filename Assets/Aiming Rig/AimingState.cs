@@ -7,34 +7,38 @@ using System.Collections;
 
 public class AimingState : StateMachineTry.State
 {
-	#region Components
-	public Transform cameraRig;
-	public Animator characterAnimatorController;
-	private Rigidbody rb;
-	#endregion
-
-	#region Aiming Rig Variables
-	public Animator aimingRigAnimatorController;
-	public Animator rightHandIKAnimator;
-	private float targetVerticalAngle = 0f;
-	private float verticalAngle = 0f;
-
+	#region Debug Fields
 	public bool ikActive = false;
 	public bool ikActiveLook = false;
 	public bool ikActiveRightHand = false;
 	public bool ikActiveLeftHand = false;
-	
-	public Transform rightHandIK = null;
-	public Transform leftHandIK = null;
-	public Transform lookIK = null;
-	public Transform target;
-	public bool forceLookAtTarget; //Vai ser false quando o cara estiver (andando e não atirando) e true quando ele estiver (atirando ou não andando).
-
+	public bool forceRightHandLookAtTarget; 
+	//Provavelmente ai ser false quando o cara estiver (andando e não atirando) e true quando ele estiver (atirando ou não andando).
 	#endregion
 
-	#region Settings
+	#region Settings Fields
 	public Vector2 aimingSensitivity = new Vector2(.1f, .1f);
 	public Vector3 moveSpeed;
+	#endregion
+
+	#region Component Fields
+	[SerializeField] private Transform cameraRig;	
+	[SerializeField] private Animator characterAnimatorController;	
+	[SerializeField] private Animator aimingRigAnimatorController;
+	private Animator rightHandIKAnimator;
+	private Rigidbody rb;
+	#endregion
+
+	#region Fields
+	private float
+		targetVerticalAngle = 0f,
+		verticalAngle = 0f;	
+
+	[SerializeField] private Transform 
+		rightHandIK = null,
+		leftHandIK = null,
+		lookIK = null,
+		target;
 	#endregion
 
 	void Start()
@@ -103,7 +107,7 @@ public class AimingState : StateMachineTry.State
 			#region Right Hand
 			if (rightHandIK != null && ikActiveRightHand && layerIndex == 1)
 			{
-				if (forceLookAtTarget)
+				if (forceRightHandLookAtTarget)
 				{
 					rightHandIK.LookAt(target, Vector3.up);
 					rightHandIK.Rotate(0f, 0f, -90f);
