@@ -81,6 +81,8 @@
     <Compile Include="Assets\Aiming Rig\AimingState.cs" />
     <Compile Include="Assets\Aiming Rig\LookAt.cs" />
     <Compile Include="Assets\Aiming Rig\VerticalAiming.cs" />
+    <Compile Include="Assets\DrawLine.cs" />
+    <Compile Include="Assets\Locomotion Rig\LocomotionState.cs" />
     <Compile Include="Assets\State Machine Try\ReadOnlyAttribute.cs" />
     <Compile Include="Assets\State Machine Try\State.cs" />
     <Compile Include="Assets\State Machine Try\StateMachineController.cs" />

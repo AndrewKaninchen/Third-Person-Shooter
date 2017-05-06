@@ -14,7 +14,7 @@ namespace StateMachineTry
 			#region Draw State's Properties		
 			prop = so.GetIterator();
 			prop.Next(true);
-			prop.NextVisible(false);			
+			prop.NextVisible(false);
 
 			while (prop.NextVisible(false))
 			{

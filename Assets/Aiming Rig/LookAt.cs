@@ -8,13 +8,12 @@ public class LookAt : MonoBehaviour {
 	public Transform barrelEnd;
 	public bool drawSightLine;
 
-	void LateUpdate () {
-		transform.LookAt(target, Vector3.up);		
+	void Update () {
+		transform.LookAt(target, transform.up);		
 	}
 
 	private void OnDrawGizmos()
-	{
-		
+	{		
 		if (drawSightLine)
 		{
 			//Gizmos.color = Color.blue;
