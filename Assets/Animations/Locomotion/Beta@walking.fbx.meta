@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: dc91670e88ca4ac43be4104952208d9b
-timeCreated: 1493256394
+guid: 7a4b86d077e95cf4bbc8388a424b2314
+timeCreated: 1494105353
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -139,7 +139,7 @@ ModelImporter:
     400128: Spine
     400130: Spine1
     400132: Spine2
-    7400000: idle
+    7400000: walking
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -165,10 +165,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: idle
+      name: walking
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 126
+      lastFrame: 62
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -180,9 +180,9 @@ ModelImporter:
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
