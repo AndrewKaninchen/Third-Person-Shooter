@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Reflection;
 
-namespace StateMachineTry
+namespace MyFSM
 {
 	[CustomEditor(typeof(State), true)]
 	public class StateEditor : Editor

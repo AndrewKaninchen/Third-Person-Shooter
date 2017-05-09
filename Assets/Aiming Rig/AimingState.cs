@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(Animator))]
 
 
-public class AimingState : StateMachineTry.State
+public class AimingState : MyFSM.State
 {
 	#region Debug Fields
 	public bool ikActive = false;
@@ -23,8 +23,8 @@ public class AimingState : StateMachineTry.State
 
 	#region Component Fields
 	[SerializeField] private Transform cameraRig;	
-	[SerializeField] private Animator characterAnimatorController;	
-	[SerializeField] private Animator aimingRigAnimatorController;
+	[SerializeField] private Animator characterAnimator;
+	[SerializeField] private Animator aimingRigAnimator;
 	private Animator rightHandIKAnimator;
 	private Rigidbody rb;
 	#endregion
@@ -41,6 +41,12 @@ public class AimingState : StateMachineTry.State
 		target;
 	#endregion
 
+	private void OnEnable()
+	{
+		characterAnimator = GetComponent<Animator>();
+		characterAnimator.SetBool("Aiming", true);
+	}
+
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
@@ -49,6 +55,14 @@ public class AimingState : StateMachineTry.State
 
 	private void Update()
 	{
+		//if(Input.GetMouseButtonDown(1))
+		//{
+		//	characterAnimator.SetBool("Aiming", false);
+		//	GetComponent<LocomotionState>().enabled = true;
+		//	enabled = false;
+		//	return;
+		//}
+
 		#region Cursor Locking
 		if (Input.GetKeyDown(KeyCode.K))
 		{
@@ -71,8 +85,8 @@ public class AimingState : StateMachineTry.State
 
 		#region Movement
 
-		characterAnimatorController.SetFloat("MoveHorizontal", Input.GetAxis("Horizontal"), .1f, Time.deltaTime);
-		characterAnimatorController.SetFloat("MoveVertical", Input.GetAxis("Vertical"), .1f, Time.deltaTime);
+		characterAnimator.SetFloat("MoveHorizontal", Input.GetAxis("Horizontal"), .1f, Time.deltaTime);
+		characterAnimator.SetFloat("MoveVertical", Input.GetAxis("Vertical"), .1f, Time.deltaTime);
 
 		Vector3 vel = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")).normalized;
 		vel = cameraRig.TransformDirection(vel);		
@@ -87,8 +101,8 @@ public class AimingState : StateMachineTry.State
 		#region Position Aiming Rig
 		//if (Cursor.lockState == CursorLockMode.Locked)
 		{
-			aimingRigAnimatorController.Play("Vertical Aiming", 0, verticalAngle);
-			aimingRigAnimatorController.Update(Time.deltaTime);
+			aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
+			aimingRigAnimator.Update(Time.deltaTime);
 		}
 		//Forcing the Aiming Rig Animator to Update before setting the IK positions to avoid lag.
 		#endregion
@@ -99,8 +113,8 @@ public class AimingState : StateMachineTry.State
 			#region Look
 			if (lookIK != null && ikActiveLook && layerIndex == 0)
 			{
-				characterAnimatorController.SetLookAtWeight(1, .5f, .5f, 1);
-				characterAnimatorController.SetLookAtPosition(target.position);
+				characterAnimator.SetLookAtWeight(1, .5f, .5f, 1);
+				characterAnimator.SetLookAtPosition(target.position);
 			}
 			#endregion
 
@@ -116,31 +130,31 @@ public class AimingState : StateMachineTry.State
 					rightHandIKAnimator.Update(Time.deltaTime);
 
 				}
-				characterAnimatorController.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-				characterAnimatorController.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-				characterAnimatorController.SetIKPosition(AvatarIKGoal.RightHand, rightHandIK.position);
-				characterAnimatorController.SetIKRotation(AvatarIKGoal.RightHand, rightHandIK.rotation);
+				characterAnimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+				characterAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+				characterAnimator.SetIKPosition(AvatarIKGoal.RightHand, rightHandIK.position);
+				characterAnimator.SetIKRotation(AvatarIKGoal.RightHand, rightHandIK.rotation);
 			}
 			#endregion
 
 			#region Left Hand
 			if (leftHandIK != null && ikActiveLeftHand && layerIndex == 2)
 			{
-				characterAnimatorController.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-				characterAnimatorController.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-				characterAnimatorController.SetIKPosition(AvatarIKGoal.LeftHand, leftHandIK.position);
-				characterAnimatorController.SetIKRotation(AvatarIKGoal.LeftHand, leftHandIK.rotation);
+				characterAnimator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+				characterAnimator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+				characterAnimator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandIK.position);
+				characterAnimator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandIK.rotation);
 			}
 			#endregion
 		}
 
 		else
 		{
-			characterAnimatorController.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
-			characterAnimatorController.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
-			characterAnimatorController.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
-			characterAnimatorController.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
-			characterAnimatorController.SetLookAtWeight(0);
+			characterAnimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+			characterAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+			characterAnimator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+			characterAnimator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+			characterAnimator.SetLookAtWeight(0);
 		} 
 		#endregion
 	}

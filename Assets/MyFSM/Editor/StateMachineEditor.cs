@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace StateMachineTry
+namespace MyFSM
 {
-	[CustomEditor(typeof(StateMachineController))]
-	public class StateMachineControllerEditor : Editor
+	[CustomEditor(typeof(StateMachine))]
+	public class StateMachineEditor : Editor
 	{		
 		SerializedObject[] stateSOs;
-		StateMachineController controller;
+		StateMachine controller;
 		bool[] fold;
 		int oldStatesLenght;
 
 		void OnEnable()
 		{
-			if (controller == null) controller = target as StateMachineController;
+			if (controller == null) controller = target as StateMachine;
 			if (fold == null) fold = new bool[controller.states.Length];
 		}
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace StateMachineTry
+namespace MyFSM
 {	
-	public class StateMachineController : MonoBehaviour
+	public class StateMachine : MonoBehaviour
 	{
 		public State[] states;		
 		public State startingState;

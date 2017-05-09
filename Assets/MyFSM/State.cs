@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace StateMachineTry
+namespace MyFSM
 {
-	[RequireComponent(typeof(StateMachineController))]
+	[RequireComponent(typeof(StateMachine))]
 	public class State : MonoBehaviour
 	{
 	}
