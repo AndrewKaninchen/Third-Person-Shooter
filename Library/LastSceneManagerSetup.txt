@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Aiming Rig/Aiming.unity
+- path: Assets/_Rigs/Locomotion Rig/Locomotion.unity
   isLoaded: 1
   isActive: 1

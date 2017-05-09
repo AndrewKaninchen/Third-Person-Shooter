@@ -81,14 +81,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Aiming Rig\AimingState.cs" />
-    <Compile Include="Assets\Aiming Rig\LookAt.cs" />
-    <Compile Include="Assets\Aiming Rig\VerticalAiming.cs" />
+    <Compile Include="Assets\CameraOrbit.cs" />
     <Compile Include="Assets\DrawLine.cs" />
-    <Compile Include="Assets\Locomotion Rig\LocomotionState.cs" />
     <Compile Include="Assets\MyFSM\State.cs" />
     <Compile Include="Assets\MyFSM\StateMachine.cs" />
     <Compile Include="Assets\TargetFinder.cs" />
+    <Compile Include="Assets\_Rigs\Aiming Rig\AimingState.cs" />
+    <Compile Include="Assets\_Rigs\Aiming Rig\LookAt.cs" />
+    <Compile Include="Assets\_Rigs\Aiming Rig\VerticalAiming.cs" />
+    <Compile Include="Assets\_Rigs\Locomotion Rig\LocomotionState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

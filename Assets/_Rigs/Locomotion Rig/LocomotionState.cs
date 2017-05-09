@@ -9,20 +9,27 @@ public class LocomotionState : MonoBehaviour {
 	private Animator anim;
 	#endregion
 
-	#region Fields
+	#region Variables
 	private float sprintMultiplier;
 	private float speedMultiplier;
-	private Vector3 velocity = Vector3.zero;
+	private Vector3 inputDir;
 	#endregion
 
-	private Vector3 inputDir;
-	public Transform camTransform;
+	#region Fields
 	public float moveSpeed = 5f;
+	#endregion
+	
+	#region Camera Variables
+	[Header("Camera Variables")]
+	public Transform cameraTransform;
+	private Transform projectedCameraTransform;
+	#endregion
 
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
 		anim = GetComponent<Animator>();
+		projectedCameraTransform = new GameObject().transform;	
 	}
 	
 	void Update () {
@@ -35,25 +42,20 @@ public class LocomotionState : MonoBehaviour {
 	private void FixedUpdate()
 	{
 		inputDir.Normalize();
+		projectedCameraTransform.position = new Vector3 (cameraTransform.position.x, 0f, cameraTransform.position.z);
+		projectedCameraTransform.LookAt(transform);
 		rb.velocity = Vector3.Lerp
 		(
 			rb.velocity,
-			camTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed),
+			projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed),
 			.5f
 		);
 
-		//rb.velocity = Vector3.SmoothDamp
-		//(
-		//	rb.velocity,
-		//	camTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed),
-		//	ref velocity,
-		//	.1f
-		//);
 		if (rb.velocity.sqrMagnitude > Mathf.Epsilon)
 		{			
 			transform.LookAt(transform.position + rb.velocity, Vector3.up);
 		}
 		anim.SetFloat("MoveVertical", rb.velocity.magnitude, .1f, Time.fixedDeltaTime);
 		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
-	}
+	}	
 }
