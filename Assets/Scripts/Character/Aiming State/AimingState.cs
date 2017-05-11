@@ -46,12 +46,19 @@ public class AimingState : StateBehaviour
 		characterAnimator.SetBool("Aiming", true);
 		rb = GetComponent<Rigidbody>();
 		rightHandIKAnimator = rightHandIK.GetComponent<Animator>();
+
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
 	}
 
 	private void OnDisable()
-	{
-		cameraRig.gameObject.SetActive(false);
+	{		
 		characterAnimator.SetBool("Aiming", false);
+		cameraRig.gameObject.SetActive(false);
+
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 0f);
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 0f);
+		
 	}
 
 	private void Update()

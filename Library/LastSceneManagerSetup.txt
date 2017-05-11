@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Rigs/Locomotion Rig/Locomotion.unity
+- path: Assets/Scenes/State Machine.unity
   isLoaded: 1
   isActive: 1

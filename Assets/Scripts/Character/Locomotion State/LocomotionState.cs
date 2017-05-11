@@ -26,22 +26,25 @@ public class LocomotionState : StateBehaviour {
 	private Transform projectedCameraTransform;
 	#endregion
 
-	private void Start () {
-		rb = GetComponent<Rigidbody>();
-		anim = GetComponent<Animator>();
+	private void Start ()
+	{
 		projectedCameraTransform = new GameObject().transform;
 		projectedCameraTransform.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
 	}
 
 	private void OnEnable()
 	{
+		rb = GetComponent<Rigidbody>();
+		anim = GetComponent<Animator>();
 		cameraTransform.gameObject.SetActive(true);
+		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
 	}
 
 	private void OnDisable()
 	{
 		if(cameraTransform != null)
 			cameraTransform.gameObject.SetActive(false);
+		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 0f);
 	}
 
 	private void Update ()
@@ -57,8 +60,8 @@ public class LocomotionState : StateBehaviour {
 
 		var isSprinting = Input.GetKey(KeyCode.LeftShift);
 		inputDir = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-		speedMultiplier = Mathf.Lerp(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon)?moveSpeed:0f, .1f);			
-		sprintMultiplier = Mathf.Lerp(sprintMultiplier, ((isSprinting) ? 2f : 1f), .1f);				
+		speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon)?moveSpeed:0f, Time.deltaTime * 30f);
+		sprintMultiplier = Mathf.MoveTowards(sprintMultiplier, ((isSprinting) ? 2f : 1f), Time.deltaTime * 30f);
 	}
 
 	private void FixedUpdate()
@@ -66,11 +69,11 @@ public class LocomotionState : StateBehaviour {
 		inputDir.Normalize();
 		projectedCameraTransform.position = new Vector3 (cameraTransform.position.x, 0f, cameraTransform.position.z);
 		projectedCameraTransform.LookAt(transform);
-		rb.velocity = Vector3.Lerp
+		rb.velocity = Vector3.MoveTowards
 		(
 			rb.velocity,
 			projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed),
-			.5f
+			Time.fixedDeltaTime * 30f
 		);
 
 		if (rb.velocity.sqrMagnitude > Mathf.Epsilon)
