@@ -79,17 +79,28 @@
     <Reference Include="Cinemachine">
       <HintPath>Assets\Cinemachine\Code\Cinemachine.dll</HintPath>
     </Reference>
+    <Reference Include="BehaviourMachineRuntime">
+      <HintPath>Assets\Plugins\BehaviourMachine\BehaviourMachineRuntime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Third Person Shooter.Plugins.csproj">
+      <Project>{1DBA51A8-D3FA-0EAD-079A-61C703D7D0C6}</Project>
+      <Name>Third Person Shooter.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CameraOrbit.cs" />
     <Compile Include="Assets\DrawLine.cs" />
-    <Compile Include="Assets\MyFSM\State.cs" />
-    <Compile Include="Assets\MyFSM\StateMachine.cs" />
+    <Compile Include="Assets\Plugin Extensions\BehaviourMachine\StateMachineDebugger.cs" />
+    <Compile Include="Assets\Scripts\Character\Aiming State\AimingState.cs" />
+    <Compile Include="Assets\Scripts\Character\Aiming State\LookAt.cs" />
+    <Compile Include="Assets\Scripts\Character\Aiming State\VerticalAiming.cs" />
+    <Compile Include="Assets\Scripts\Character\Locomotion State\LocomotionState.cs" />
     <Compile Include="Assets\TargetFinder.cs" />
-    <Compile Include="Assets\_Rigs\Aiming Rig\AimingState.cs" />
-    <Compile Include="Assets\_Rigs\Aiming Rig\LookAt.cs" />
-    <Compile Include="Assets\_Rigs\Aiming Rig\VerticalAiming.cs" />
-    <Compile Include="Assets\_Rigs\Locomotion Rig\LocomotionState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Plugins\BehaviourMachine\Readme!!!.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
