@@ -94,7 +94,9 @@
     <Compile Include="Assets\Scripts\Character\Aiming State\AimingState.cs" />
     <Compile Include="Assets\Scripts\Character\Aiming State\LookAt.cs" />
     <Compile Include="Assets\Scripts\Character\Aiming State\VerticalAiming.cs" />
+    <Compile Include="Assets\Scripts\Character\AimingToLocomotion.cs" />
     <Compile Include="Assets\Scripts\Character\Locomotion State\LocomotionState.cs" />
+    <Compile Include="Assets\Scripts\Character\LocomotionToAiming.cs" />
     <Compile Include="Assets\Scripts\DrawLine.cs" />
     <Compile Include="Assets\Scripts\TargetFinder.cs" />
   </ItemGroup>

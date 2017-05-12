@@ -44,4 +44,10 @@ public class CameraOrbit : MonoBehaviour
 		transform.LookAt(target);
 		#endregion
 	}
+
+	public void ResetRotation()
+	{
+		tetha = (Mathf.PI) - (Mathf.PI * .8f);
+		phi = Mathf.PI;		
+	}
 }

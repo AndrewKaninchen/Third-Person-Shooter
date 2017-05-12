@@ -1,0 +1,36 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using BehaviourMachine;
+
+public class LocomotionToAiming : StateBehaviour
+{
+	AimingState aiming;
+	LocomotionState locomotion;
+	Animator characterAnimator;
+	Animator verticalAimingAnimator;
+
+	Quaternion targetRotation;
+
+	private void OnEnable()
+	{
+		if (aiming == null) aiming = GetComponent<AimingState>();
+		if (locomotion == null) locomotion = GetComponent<LocomotionState>();
+		if (characterAnimator == null) characterAnimator = GetComponent<Animator>();
+		if (verticalAimingAnimator == null) verticalAimingAnimator = aiming.aimingRigAnimator;
+		targetRotation = Quaternion.LookRotation(locomotion.ProjectedCameraTransform.forward, Vector3.up);
+
+		characterAnimator.SetBool("Aiming", true);
+		//verticalAimingAnimator.Play("Vertical Aiming", 0, Mathf.Clamp(, -55f, 55f));
+		//verticalAimingAnimator.Update(Time.deltaTime);
+	}
+	private void FixedUpdate()
+	{
+		if (transform.rotation == targetRotation)
+		{
+			SendEvent("AIMING_FORWARD");
+			return;
+		}
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 1440 * Time.fixedDeltaTime);
+	}
+}

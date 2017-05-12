@@ -20,9 +20,9 @@ public class AimingState : StateBehaviour
 	#endregion
 
 	#region Component Fields
-	[SerializeField] private Transform cameraRig;	
+	public Transform cameraRig;	
 	[SerializeField] private Animator characterAnimator;
-	[SerializeField] private Animator aimingRigAnimator;
+	public Animator aimingRigAnimator;
 	private Animator rightHandIKAnimator;
 	private Rigidbody rb;
 	#endregion
@@ -31,6 +31,7 @@ public class AimingState : StateBehaviour
 	private float
 		targetVerticalAngle = 0f,
 		verticalAngle = 0f;	
+	public float VerticalAngle { get { return verticalAngle; } }
 
 	[SerializeField] private Transform 
 		rightHandIK = null,
@@ -40,13 +41,13 @@ public class AimingState : StateBehaviour
 	#endregion
 
 	private void OnEnable()
-	{		
-		cameraRig.gameObject.SetActive(true);
-		characterAnimator = GetComponent<Animator>();
-		characterAnimator.SetBool("Aiming", true);
-		rb = GetComponent<Rigidbody>();
-		rightHandIKAnimator = rightHandIK.GetComponent<Animator>();
+	{
+		if (characterAnimator == null)	characterAnimator = GetComponent<Animator>();
+		if (rb == null)	rb = GetComponent<Rigidbody>();
+		if (rightHandIKAnimator == null) rightHandIKAnimator = rightHandIK.GetComponent<Animator>();
 
+		cameraRig.gameObject.SetActive(true);
+		characterAnimator.SetBool("Aiming", true);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
 	}
@@ -65,7 +66,7 @@ public class AimingState : StateBehaviour
 	{
 		if (Input.GetMouseButtonUp(1))
 		{
-			GetComponent<StateMachine>().SendEvent("TOGGLE_AIMING");
+			SendEvent("TOGGLE_AIMING");
 			return;
 		}
 

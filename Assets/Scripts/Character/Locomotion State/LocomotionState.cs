@@ -25,6 +25,8 @@ public class LocomotionState : StateBehaviour {
 	//[Header("Camera Variables")]
 	[SerializeField] private Transform cameraTransform;
 	private Transform projectedCameraTransform;
+	public Transform ProjectedCameraTransform { get { return projectedCameraTransform; } }
+	public CameraOrbit cameraBehaviour;
 	#endregion
 
 	private void Start ()
@@ -35,8 +37,9 @@ public class LocomotionState : StateBehaviour {
 
 	private void OnEnable()
 	{
-		rb = GetComponent<Rigidbody>();
-		anim = GetComponent<Animator>();
+		if (rb == null) rb = GetComponent<Rigidbody>();
+		if (anim == null) anim = GetComponent<Animator>();
+		if (cameraBehaviour == null) cameraBehaviour = cameraTransform.GetComponentInChildren<CameraOrbit>();
 		cameraTransform.gameObject.SetActive(true);
 		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
 	}
@@ -53,7 +56,7 @@ public class LocomotionState : StateBehaviour {
 		#region Check For State Transition Events
 		if(Input.GetMouseButtonDown(1))
 		{
-			GetComponent<StateMachine>().SendEvent("TOGGLE_AIMING");
+			SendEvent("TOGGLE_AIMING");
 			return;
 		}
 
