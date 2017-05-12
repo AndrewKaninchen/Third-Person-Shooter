@@ -5,6 +5,7 @@ using BehaviourMachine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
+[AddComponentMenu("TPS/LocomotionState")]
 public class LocomotionState : StateBehaviour {
 
 	#region Fields

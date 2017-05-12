@@ -2,7 +2,7 @@
 using BehaviourMachine;
 
 [RequireComponent(typeof(Animator))]
-
+[AddComponentMenu("TPS/AimingState")]
 public class AimingState : StateBehaviour
 {
 	#region Debug Fields
