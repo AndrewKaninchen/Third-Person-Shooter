@@ -31,8 +31,7 @@ public class AimingState : StateBehaviour
 	private float
 		targetVerticalAngle = 0f,
 		verticalAngle = 0f;	
-	public float VerticalAngle { get { return verticalAngle; } }
-
+	public float VerticalAngle { get { return verticalAngle; } set { targetVerticalAngle = value;}}
 	[SerializeField] private Transform 
 		rightHandIK = null,
 		leftHandIK = null,

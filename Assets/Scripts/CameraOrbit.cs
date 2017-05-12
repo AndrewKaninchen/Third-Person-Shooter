@@ -9,7 +9,9 @@ public class CameraOrbit : MonoBehaviour
 	public Vector2 speed;
 	public Transform target;
 
-	private float tetha = (Mathf.PI) - (Mathf.PI * .8f), phi = Mathf.PI;
+	private float tetha = Mathf.PI/2, phi = Mathf.PI;
+	public float AngleTetha{get{return tetha;}}
+	public float AnglePhi{get{return phi;}}
 	private Vector3 currentPosition = new Vector3();
 	#endregion
 
@@ -30,7 +32,7 @@ public class CameraOrbit : MonoBehaviour
 	{
 		#region Read Input in Spherical Coordinates		
 		phi = Mathf.Repeat(phi + Input.GetAxis("Mouse X") * Time.deltaTime * speed.x, Mathf.PI * 2);
-		tetha = Mathf.Clamp(tetha + Input.GetAxis("Mouse Y") * Time.deltaTime * speed.y, (Mathf.PI) - (Mathf.PI * .9f), Mathf.PI * .8f);
+		tetha = Mathf.Clamp(tetha + Input.GetAxis("Mouse Y") * Time.deltaTime * speed.y, (Mathf.PI) - (Mathf.PI * .9f), Mathf.PI * .6f);
 		#endregion
 
 		#region Transform from Spherical to Cartesian Space
