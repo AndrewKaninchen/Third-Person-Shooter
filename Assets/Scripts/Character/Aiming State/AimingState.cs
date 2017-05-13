@@ -49,6 +49,9 @@ public class AimingState : StateBehaviour
 		characterAnimator.SetBool("Aiming", true);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
+
+		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
+		aimingRigAnimator.Update(1f);
 	}
 
 	private void OnDisable()
@@ -58,7 +61,6 @@ public class AimingState : StateBehaviour
 
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 0f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 0f);
-		
 	}
 
 	private void Update()
@@ -102,14 +104,11 @@ public class AimingState : StateBehaviour
 		#endregion
 	}
 
-	void OnAnimatorIK(int layerIndex)
+	private void OnAnimatorIK(int layerIndex)
 	{
 		#region Position Aiming Rig
-		//if (Cursor.lockState == CursorLockMode.Locked)
-		{
-			aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
-			aimingRigAnimator.Update(Time.deltaTime);
-		}
+		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
+		aimingRigAnimator.Update(Time.deltaTime);
 		//Forcing the Aiming Rig Animator to Update before setting the IK positions to avoid lag.
 		#endregion
 

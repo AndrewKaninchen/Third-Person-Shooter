@@ -9,10 +9,13 @@ public class CameraOrbit : MonoBehaviour
 	public Vector2 speed;
 	public Transform target;
 
-	private float tetha = Mathf.PI/2, phi = Mathf.PI;
-	public float AngleTetha{get{return tetha;}}
-	public float AnglePhi{get{return phi;}}
+	private float tetha = Mathf.PI/2, phi = 0;	
 	private Vector3 currentPosition = new Vector3();
+	#endregion
+
+	#region Properties
+	public float AngleXZ { get { return phi; } }
+	public float AngleYZ { get { return tetha; } }
 	#endregion
 
 	private void Update()
@@ -49,7 +52,10 @@ public class CameraOrbit : MonoBehaviour
 
 	public void ResetRotation()
 	{
+		Vector3 targetPosition = new Vector3(0f, 1f, -distanceFromTarget);
+		target.TransformPoint(targetPosition);
+
 		tetha = (Mathf.PI) - (Mathf.PI * .8f);
-		phi = Mathf.PI;		
+		phi = Mathf.PI;
 	}
 }

@@ -5,16 +5,18 @@ using BehaviourMachine;
 
 public class LocomotionToAiming : StateBehaviour
 {
-	AimingState aiming;
-	LocomotionState locomotion;
-	Animator characterAnimator;
-	Animator verticalAimingAnimator;
+	private AimingState aiming;
+	private LocomotionState locomotion;
+	private Animator characterAnimator;
+	private Animator verticalAimingAnimator;
 
-	Quaternion targetRotationHorizontal;
-	float targetRotationVertical;
+	private Quaternion targetRotationHorizontal;
+	private float targetRotationVertical;
+	private float remainingTime;
 
 	private void OnEnable()
 	{
+		remainingTime = 0.5f;
 		if (aiming == null) aiming = GetComponent<AimingState>();
 		if (locomotion == null) locomotion = GetComponent<LocomotionState>();
 		if (characterAnimator == null) characterAnimator = GetComponent<Animator>();
@@ -22,23 +24,24 @@ public class LocomotionToAiming : StateBehaviour
 		
 		#region Calculate Target Rotations
 		targetRotationHorizontal = Quaternion.LookRotation(locomotion.ProjectedCameraTransform.forward, Vector3.up);
-		targetRotationHorizontal *= Quaternion.Euler(0f,45f,0f);
-		characterAnimator.SetBool("Aiming", true);
+		targetRotationHorizontal *= Quaternion.Euler(0f,45f,0f);		
 
-		targetRotationVertical = Mathf.Clamp(locomotion.cameraBehaviour.AngleTetha - Mathf.PI/2 * Mathf.Rad2Deg , -55f, 55f);
+		targetRotationVertical = Mathf.Clamp((locomotion.cameraBehaviour.AngleYZ - Mathf.PI/2) * Mathf.Rad2Deg , -55f, 55f);
 		targetRotationVertical = targetRotationVertical.Remap(-55f, 55f, 0f, 1f);
 		aiming.VerticalAngle = targetRotationVertical;
-		verticalAimingAnimator.SetFloat("Vertical Angle", targetRotationVertical);
 		#endregion
+
+		characterAnimator.SetBool("Aiming", true);		
 	}
 	private void FixedUpdate()
-	{
-		if (transform.rotation == targetRotationHorizontal)
+	{	
+		if (transform.rotation == targetRotationHorizontal || remainingTime <= Mathf.Epsilon)
 		{
 			SendEvent("AIMING_FORWARD");
 			return;
 		}
 		transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotationHorizontal, 1440 * Time.fixedDeltaTime);
+		remainingTime -= Time.fixedDeltaTime;
 	}
 }
 
