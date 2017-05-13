@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Third Person Shooter", "Thi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Third Person Shooter.Editor.Plugins", "Third Person Shooter.Editor.Plugins.csproj", "{19DFFB72-0042-9FDD-CE68-E5BDE717437E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Third Person Shooter.Editor", "Third Person Shooter.Editor.csproj", "{2EFEA17E-DB09-93E5-1B0B-6A6A6A8A2BF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{19DFFB72-0042-9FDD-CE68-E5BDE717437E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19DFFB72-0042-9FDD-CE68-E5BDE717437E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19DFFB72-0042-9FDD-CE68-E5BDE717437E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EFEA17E-DB09-93E5-1B0B-6A6A6A8A2BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EFEA17E-DB09-93E5-1B0B-6A6A6A8A2BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EFEA17E-DB09-93E5-1B0B-6A6A6A8A2BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EFEA17E-DB09-93E5-1B0B-6A6A6A8A2BF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

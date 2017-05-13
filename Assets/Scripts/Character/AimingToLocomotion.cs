@@ -21,7 +21,7 @@ public class AimingToLocomotion : StateBehaviour
 		//targetRotation = Quaternion.LookRotation(aiming.cameraRig.transform.forward, Vector3.up);
 
 		characterAnimator.SetBool("Aiming", false);
-		locomotion.cameraBehaviour.ResetRotation();
+		locomotion.cameraBehaviour.gameObject.SetActive(true);
 
 		SendEvent("AIMING_FORWARD");
 	}

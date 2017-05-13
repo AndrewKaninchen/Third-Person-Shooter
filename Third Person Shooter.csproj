@@ -98,6 +98,7 @@
     <Compile Include="Assets\Scripts\Character\Locomotion State\LocomotionState.cs" />
     <Compile Include="Assets\Scripts\Character\LocomotionToAiming.cs" />
     <Compile Include="Assets\Scripts\DrawLine.cs" />
+    <Compile Include="Assets\Scripts\Plugin Extensions\BehaviourMachine\StateMachineDebugger.cs" />
     <Compile Include="Assets\Scripts\TargetFinder.cs" />
   </ItemGroup>
   <ItemGroup>

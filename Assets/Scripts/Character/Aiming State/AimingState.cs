@@ -65,7 +65,7 @@ public class AimingState : StateBehaviour
 
 	private void Update()
 	{
-		if (Input.GetMouseButtonUp(1))
+		if ((Cursor.lockState == CursorLockMode.Locked) && !Input.GetMouseButton(1))
 		{
 			SendEvent("TOGGLE_AIMING");
 			return;
