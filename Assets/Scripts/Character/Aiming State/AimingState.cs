@@ -37,6 +37,7 @@ public class AimingState : StateBehaviour
 		leftHandIK = null,
 		lookIK = null,
 		target;
+	private Vector3 currentTargetPosition;
 	#endregion
 
 	private void OnEnable()
@@ -68,7 +69,6 @@ public class AimingState : StateBehaviour
 		if ((Cursor.lockState == CursorLockMode.Locked) && !Input.GetMouseButton(1))
 		{
 			SendEvent("TOGGLE_AIMING");
-			return;
 		}
 
 		#region Cursor Locking
@@ -119,7 +119,8 @@ public class AimingState : StateBehaviour
 			if (lookIK != null && ikActiveLook && layerIndex == 0)
 			{
 				characterAnimator.SetLookAtWeight(1, .5f, .5f, 1);
-				characterAnimator.SetLookAtPosition(target.position);
+				currentTargetPosition = Vector3.Lerp(currentTargetPosition, target.position, .4f);
+				characterAnimator.SetLookAtPosition(currentTargetPosition);
 			}
 			#endregion
 
@@ -127,8 +128,8 @@ public class AimingState : StateBehaviour
 			if (rightHandIK != null && ikActiveRightHand && layerIndex == 1)
 			{
 				if (forceRightHandLookAtTarget)
-				{
-					rightHandIK.LookAt(target, Vector3.up);
+				{					
+					rightHandIK.LookAt(currentTargetPosition, Vector3.up);
 					rightHandIK.Rotate(0f, 0f, -90f);
 
 					rightHandIKAnimator.Play("Vertical Aiming", 0, verticalAngle);

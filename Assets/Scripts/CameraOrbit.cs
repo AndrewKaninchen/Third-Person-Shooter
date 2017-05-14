@@ -9,14 +9,22 @@ public class CameraOrbit : MonoBehaviour
 	public Vector2 speed;
 	public Transform target;
 
-	private float tetha, phi;	
+	private float angleXY, angleYZ;	
 	private Vector3 currentPosition = new Vector3();
 	#endregion
 
 	#region Properties
-	public float AngleXZ { get { return phi; } }
-	public float AngleYZ { get { return tetha; } }
+	public Vector3 CurrentPosition { get { return currentPosition; } }
+	public float AngleXZ { get { return angleYZ; } }
+	public float AngleYZ { get { return angleXY; } }
+	public float DistanceFromTarget { get { return distanceFromTarget; } }
 	#endregion
+
+	private void OnEnable()
+	{
+		transform.position = target.TransformPoint(new Vector3(0f, 0f, -distanceFromTarget));
+		transform.LookAt(target);
+	}
 
 	private void Update()
 	{
@@ -31,46 +39,49 @@ public class CameraOrbit : MonoBehaviour
 		#endregion
 
 		#region Read Input in Spherical Coordinates		
-		phi = Mathf.Repeat(phi + Input.GetAxis("Mouse X") * Time.deltaTime * speed.x, Mathf.PI * 2);
-		tetha = Mathf.Clamp(tetha + Input.GetAxis("Mouse Y") * Time.deltaTime * speed.y, (Mathf.PI) - (Mathf.PI * .9f), Mathf.PI * .6f);
+		angleYZ = Mathf.Repeat(angleYZ + Input.GetAxis("Mouse X") * Time.deltaTime * speed.x, Mathf.PI * 2);
+		angleXY = Mathf.Clamp(angleXY + Input.GetAxis("Mouse Y") * Time.deltaTime * speed.y, (Mathf.PI) - (Mathf.PI * .9f), Mathf.PI * .6f);
 		#endregion
 
-		UpdatePosition();
+		SetPositionFromSphericalCoordinates();
 	}
 
-	private void OnEnable()
+	public void SetPositionFromSphericalCoordinates()
 	{
-		ResetRotation();
-	}
-
-	private void ResetRotation()
-	{
-		currentPosition = target.position + new Vector3(0f, 0f, -distanceFromTarget);
-		currentPosition = target.TransformPoint(currentPosition);
-
-		#region Transform from Cartesian to Spherical Space		
-		//https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
-		//Axis are a little different in Unity: x = x(U), y = z(U), z = y(U), where n(U) is Unity's 'n' axis when compared to regular mathematical axis
-		tetha = Mathf.Acos(currentPosition.y / distanceFromTarget); 
-		phi =	Mathf.Atan(currentPosition.z / currentPosition.x);
-		#endregion
-
-		UpdatePosition();
-	}
-
-	private void UpdatePosition()
-	{
-		#region Transform from Spherical to Cartesian Space
 		//https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
 		//Axis are a little different in Unity: x = z(U), y = x(U), z = y(U), where n(U) is Unity's 'n' axis when compared to regular mathematical axis
-		currentPosition.x = distanceFromTarget * Mathf.Sin(tetha) * Mathf.Sin(phi);
-		currentPosition.z = distanceFromTarget * Mathf.Sin(tetha) * Mathf.Cos(phi);
-		currentPosition.y = distanceFromTarget * Mathf.Cos(tetha);
-		#endregion
+		currentPosition.x = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Sin(angleYZ);
+		currentPosition.z = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Cos(angleYZ);
+		currentPosition.y = distanceFromTarget * Mathf.Cos(angleXY);
+		
+		UpdatePosition();
+	}
 
-		#region Set the Transform
-		transform.position = currentPosition + target.position;
+	public void SetPositionFromSphericalCoordinates(float distanceFromTarget, float angleXY, float angleYZ)
+	{
+		this.angleXY = angleXY;
+		this.angleYZ = angleYZ;
+		this.distanceFromTarget = distanceFromTarget;
+
+		SetPositionFromSphericalCoordinates();
+	}
+
+	public void SetPositionFromCartesianCoordinates(Vector3 position)
+	{
+		currentPosition = position;
+
+		//https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
+		//Axis are a little different in Unity: x = x(U), y = z(U), z = y(U), where n(U) is Unity's 'n' axis when compared to regular mathematical axis
+		distanceFromTarget = Mathf.Sqrt(Mathf.Pow(position.x, 2) + Mathf.Pow(position.y, 2) + Mathf.Pow(position.z, 2));
+		angleXY = Mathf.Acos(position.y / distanceFromTarget);
+		angleYZ = Mathf.Atan(position.z / position.x);
+		
+		UpdatePosition();
+	}
+	
+	private void UpdatePosition()
+	{
+		transform.position = target.position + currentPosition;
 		transform.LookAt(target);
-		#endregion
 	}
 }

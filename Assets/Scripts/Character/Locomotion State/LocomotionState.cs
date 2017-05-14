@@ -57,7 +57,6 @@ public class LocomotionState : StateBehaviour {
 		if(Input.GetMouseButtonDown(1))
 		{
 			SendEvent("TOGGLE_AIMING");
-			return;
 		}
 
 		#endregion
