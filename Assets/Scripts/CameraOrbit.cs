@@ -10,11 +10,11 @@ public class CameraOrbit : MonoBehaviour
 	public Transform target;
 
 	private float angleXY, angleYZ;	
-	private Vector3 currentPosition = new Vector3();
+	private Vector3 localPosition = new Vector3();
 	#endregion
 
 	#region Properties
-	public Vector3 CurrentPosition { get { return currentPosition; } }
+	public Vector3 CurrentPosition { get { return localPosition; } }
 	public float AngleXZ { get { return angleYZ; } }
 	public float AngleYZ { get { return angleXY; } }
 	public float DistanceFromTarget { get { return distanceFromTarget; } }
@@ -23,7 +23,7 @@ public class CameraOrbit : MonoBehaviour
 	private void OnEnable()
 	{
 		transform.position = target.TransformPoint(new Vector3(0f, 0f, -distanceFromTarget));
-		transform.LookAt(target);
+		transform.LookAt(target);		
 	}
 
 	private void Update()
@@ -50,9 +50,9 @@ public class CameraOrbit : MonoBehaviour
 	{
 		//https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
 		//Axis are a little different in Unity: x = z(U), y = x(U), z = y(U), where n(U) is Unity's 'n' axis when compared to regular mathematical axis
-		currentPosition.x = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Sin(angleYZ);
-		currentPosition.z = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Cos(angleYZ);
-		currentPosition.y = distanceFromTarget * Mathf.Cos(angleXY);
+		localPosition.x = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Sin(angleYZ);
+		localPosition.z = distanceFromTarget * Mathf.Sin(angleXY) * Mathf.Cos(angleYZ);
+		localPosition.y = distanceFromTarget * Mathf.Cos(angleXY);
 		
 		UpdatePosition();
 	}
@@ -68,20 +68,20 @@ public class CameraOrbit : MonoBehaviour
 
 	public void SetPositionFromCartesianCoordinates(Vector3 position)
 	{
-		currentPosition = position;
+		this.localPosition = position - target.position;
 
 		//https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
 		//Axis are a little different in Unity: x = x(U), y = z(U), z = y(U), where n(U) is Unity's 'n' axis when compared to regular mathematical axis
-		distanceFromTarget = Mathf.Sqrt(Mathf.Pow(position.x, 2) + Mathf.Pow(position.y, 2) + Mathf.Pow(position.z, 2));
-		angleXY = Mathf.Acos(position.y / distanceFromTarget);
-		angleYZ = Mathf.Atan(position.z / position.x);
+		distanceFromTarget = Mathf.Sqrt(Mathf.Pow(localPosition.x, 2) + Mathf.Pow(localPosition.y, 2) + Mathf.Pow(localPosition.z, 2));
+		angleXY = Mathf.Acos(localPosition.y / distanceFromTarget);
+		angleYZ = Mathf.Atan(localPosition.z / localPosition.x);
 		
 		UpdatePosition();
 	}
 	
 	private void UpdatePosition()
 	{
-		transform.position = target.position + currentPosition;
+		transform.position = target.position + localPosition;
 		transform.LookAt(target);
 	}
 }
