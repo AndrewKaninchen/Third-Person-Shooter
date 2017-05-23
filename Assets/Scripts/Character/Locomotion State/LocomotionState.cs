@@ -26,7 +26,7 @@ public class LocomotionState : StateBehaviour {
 	[SerializeField] private Transform cameraTransform;
 	private Transform projectedCameraTransform;
 	public Transform ProjectedCameraTransform { get { return projectedCameraTransform; } }
-	public FreelookCamera cameraBehaviour;
+	public CameraOrbit cameraBehaviour;
 	#endregion
 
 	private void Start ()
@@ -39,7 +39,7 @@ public class LocomotionState : StateBehaviour {
 	{
 		if (rb == null) rb = GetComponent<Rigidbody>();
 		if (anim == null) anim = GetComponent<Animator>();
-		if (cameraBehaviour == null) cameraBehaviour = cameraTransform.GetComponentInChildren<FreelookCamera>();
+		if (cameraBehaviour == null) cameraBehaviour = cameraTransform.GetComponentInChildren<CameraOrbit>();
 		cameraTransform.gameObject.SetActive(true);
 		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
 	}
