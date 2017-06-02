@@ -75,10 +75,13 @@ public class LocomotionState : StateBehaviour {
 		//rb.AddForce(projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed), ForceMode.VelocityChange);
 
 
+		var targetVelocity = projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed);
+		targetVelocity.y = rb.velocity.y;
+
 		rb.velocity = Vector3.MoveTowards
 		(
 			rb.velocity,
-			projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed),
+			targetVelocity,
 			Time.fixedDeltaTime * 30f
 		);
 
