@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/State Machine.unity
-  isLoaded: 1
-  isActive: 1
+- path: Assets/New Scene.unity
+  isLoaded: 0
+  isActive: 0

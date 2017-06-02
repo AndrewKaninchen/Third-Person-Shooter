@@ -66,14 +66,14 @@ public class LocomotionState : StateBehaviour {
 		speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon)?moveSpeed:0f, Time.deltaTime * 30f);
 		sprintMultiplier = Mathf.MoveTowards(sprintMultiplier, ((isSprinting) ? 2f : 1f), Time.deltaTime * 30f);
 	}
-
+	
 	private void FixedUpdate()
 	{
 		inputDir.Normalize();
 		projectedCameraTransform.position = new Vector3 (cameraTransform.position.x, 0f, cameraTransform.position.z);		
-		projectedCameraTransform.LookAt(new Vector3 (transform.position.x, 0f, transform.position.z));			
+		projectedCameraTransform.LookAt(new Vector3 (transform.position.x, 0f, transform.position.z));
 		//rb.AddForce(projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed), ForceMode.VelocityChange);
-		
+
 
 		rb.velocity = Vector3.MoveTowards
 		(
@@ -83,10 +83,11 @@ public class LocomotionState : StateBehaviour {
 		);
 
 		if (rb.velocity.sqrMagnitude > Mathf.Epsilon)
-		{				
-			transform.LookAt(transform.position + new Vector3 (rb.velocity.x, 0f, rb.velocity.z), Vector3.up);
+		{
+			transform.LookAt(transform.position + new Vector3(rb.velocity.x, 0f, rb.velocity.z), Vector3.up);
 		}
 		anim.SetFloat("MoveVertical", rb.velocity.magnitude, .1f, Time.fixedDeltaTime);
-		anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
+
+		//anim.SetFloat("MoveVertical", speedMultiplier*sprintMultiplier, .1f, Time.fixedDeltaTime);
 	}	
 }

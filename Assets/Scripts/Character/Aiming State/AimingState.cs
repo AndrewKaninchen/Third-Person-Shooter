@@ -30,7 +30,9 @@ public class AimingState : StateBehaviour
 	#region Fields
 	private float
 		targetVerticalAngle = 0f,
-		verticalAngle = 0f;	
+		verticalAngle = 0f;
+	private bool
+		shooting = false;
 	public float VerticalAngle { get { return verticalAngle; } set { targetVerticalAngle = value;}}
 	[SerializeField] private Transform 
 		rightHandIK = null,
@@ -50,6 +52,7 @@ public class AimingState : StateBehaviour
 		characterAnimator.SetBool("Aiming", true);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Legs"), 1f);		
 
 		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
 		aimingRigAnimator.Update(1f);
@@ -62,14 +65,17 @@ public class AimingState : StateBehaviour
 
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 0f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 0f);
+		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Legs"), 0f);
 	}
 
 	private void Update()
 	{
+		#region State Machine Transitions
 		if ((Cursor.lockState == CursorLockMode.Locked) && !Input.GetMouseButton(1))
 		{
 			SendEvent("TOGGLE_AIMING");
 		}
+		#endregion
 
 		#region Cursor Locking
 		if (Input.GetKeyDown(KeyCode.K))
@@ -86,7 +92,12 @@ public class AimingState : StateBehaviour
 		{
 			targetVerticalAngle = Mathf.Clamp01(targetVerticalAngle + Input.GetAxis("Mouse Y") * aimingSensitivity.y);
 			verticalAngle = Mathf.Lerp(verticalAngle, targetVerticalAngle, .3f);
-			transform.Rotate(Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -10f, 10f));
+			characterAnimator.SetFloat("AimingVertical", verticalAngle);
+
+			var rot = Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -10f, 10f);
+			characterAnimator.SetFloat("TurnHorizontal", rot.y);
+
+			transform.Rotate(rot);
 		}
 		
 		#endregion
@@ -101,6 +112,11 @@ public class AimingState : StateBehaviour
 		rb.velocity = new Vector3 (vel.x * moveSpeed.x, 0f, vel.z * moveSpeed.z);
 		
 		Debug.DrawRay(transform.position, vel, Color.cyan);
+		#endregion
+
+		#region Shooting
+		shooting = Input.GetMouseButton(0);
+		//characterAnimator.SetBool("Shooting", shooting);
 		#endregion
 	}
 
@@ -130,11 +146,7 @@ public class AimingState : StateBehaviour
 				if (forceRightHandLookAtTarget)
 				{					
 					rightHandIK.LookAt(currentTargetPosition, Vector3.up);
-					rightHandIK.Rotate(0f, 0f, -90f);
-
-					rightHandIKAnimator.Play("Vertical Aiming", 0, verticalAngle);
-					rightHandIKAnimator.Update(Time.deltaTime);
-
+					rightHandIK.Rotate(0f, 0f, -90f);					
 				}
 				characterAnimator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
 				characterAnimator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);

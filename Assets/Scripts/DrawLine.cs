@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class DrawLine : MonoBehaviour {
 	public Transform barrelEnd;
 	public Transform target;
