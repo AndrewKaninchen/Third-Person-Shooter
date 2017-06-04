@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using BehaviourMachine;
+using RootMotion.FinalIK;
 
 [RequireComponent(typeof(Animator))]
-[AddComponentMenu("TPS/AimingState")]
+[RequireComponent(typeof(FullBodyBipedIK))]
+[RequireComponent(typeof(AimIK))]
+//[AddComponentMenu("TPS/AimingState")]
 public class AimingState : StateBehaviour
 {
 	#region Debug Fields
@@ -23,7 +26,7 @@ public class AimingState : StateBehaviour
 	public Transform cameraRig;	
 	[SerializeField] private Animator characterAnimator;
 	public Animator aimingRigAnimator;
-	private Animator rightHandIKAnimator;
+	//private Animator rightHandIKAnimator;
 	private Rigidbody rb;
 	#endregion
 
@@ -42,11 +45,15 @@ public class AimingState : StateBehaviour
 	private Vector3 currentTargetPosition;
 	#endregion
 
+	AimIK aimIK;
+	LookAtIK lookAtIK;
+	FullBodyBipedIK fbbIK;
+
 	private void OnEnable()
 	{
 		if (characterAnimator == null)	characterAnimator = GetComponent<Animator>();
 		if (rb == null)	rb = GetComponent<Rigidbody>();
-		if (rightHandIKAnimator == null) rightHandIKAnimator = rightHandIK.GetComponent<Animator>();
+		//if (rightHandIKAnimator == null) rightHandIKAnimator = rightHandIK.GetComponent<Animator>();
 
 		cameraRig.gameObject.SetActive(true);
 		characterAnimator.SetBool("Aiming", true);
@@ -56,6 +63,15 @@ public class AimingState : StateBehaviour
 
 		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
 		aimingRigAnimator.Update(1f);
+
+		if (aimIK == null) aimIK = GetComponent<AimIK>();
+		if (fbbIK == null) fbbIK = GetComponent<FullBodyBipedIK>();
+		if (lookAtIK == null) lookAtIK = GetComponent<LookAtIK>();
+		aimIK.Disable();
+		fbbIK.Disable();
+		lookAtIK.Disable();
+
+		fbbIK.solver.leftArmChain.bendConstraint.weight = 1f;		
 	}
 
 	private void OnDisable()
@@ -94,6 +110,9 @@ public class AimingState : StateBehaviour
 			verticalAngle = Mathf.Lerp(verticalAngle, targetVerticalAngle, .3f);
 			characterAnimator.SetFloat("AimingVertical", verticalAngle);
 
+			aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
+			aimingRigAnimator.Update(1f);
+
 			var rot = Vector3.up * Mathf.Clamp((Input.GetAxis("Mouse X") * aimingSensitivity.x), -10f, 10f);
 			characterAnimator.SetFloat("TurnHorizontal", rot.y);
 
@@ -122,7 +141,18 @@ public class AimingState : StateBehaviour
 		#endregion
 	}
 
-	private void OnAnimatorIK(int layerIndex)
+	private void LateUpdate()
+	{
+		lookAtIK.solver.Update();
+		aimIK.solver.Update();
+				
+		fbbIK.solver.leftHandEffector.position = leftHandIK.position;
+		fbbIK.solver.leftHandEffector.rotation = leftHandIK.rotation;
+
+		fbbIK.solver.Update();
+	}
+
+	/*private void OnAnimatorIK(int layerIndex)
 	{
 		#region Position Aiming Rig
 		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
@@ -177,5 +207,5 @@ public class AimingState : StateBehaviour
 			characterAnimator.SetLookAtWeight(0);
 		} 
 		#endregion
-	}
+	}*/
 }
