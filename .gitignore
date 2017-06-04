@@ -4,6 +4,10 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
+/Assets/ProCoreBundle*
+/Assets/ProCore*
+/Assets/Plugins/RootMotion*
+/Assets/Plugins/Editor/RootMotion*
 
 # Visual Studio 2015 cache directory
 /.vs/
