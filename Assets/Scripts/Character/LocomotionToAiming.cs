@@ -24,7 +24,7 @@ public class LocomotionToAiming : StateBehaviour
 		
 		#region Calculate Target Rotations
 		targetRotationHorizontal = Quaternion.LookRotation(locomotion.ProjectedCameraTransform.forward, Vector3.up);
-		targetRotationHorizontal *= Quaternion.Euler(0f,45f,0f);		
+		targetRotationHorizontal *= Quaternion.Euler(0f,45f,0f);
 
 		targetRotationVertical = Mathf.Clamp((locomotion.cameraBehaviour.AngleYZ - Mathf.PI/2) * Mathf.Rad2Deg , -55f, 55f);
 		targetRotationVertical = targetRotationVertical.Remap(-55f, 55f, 0f, 1f);

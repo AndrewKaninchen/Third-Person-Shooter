@@ -108,7 +108,9 @@ public class AimingState : StateBehaviour
 		characterAnimator.SetFloat("MoveVertical", Input.GetAxis("Vertical"), .1f, Time.deltaTime);
 
 		Vector3 vel = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")).normalized;
-		vel = cameraRig.TransformDirection(vel);		
+		vel = cameraRig.TransformDirection(vel);
+		
+		//vel Quaternion.Euler(0f,45f,0f);
 		rb.velocity = new Vector3 (vel.x * moveSpeed.x, 0f, vel.z * moveSpeed.z);
 		
 		Debug.DrawRay(transform.position, vel, Color.cyan);
