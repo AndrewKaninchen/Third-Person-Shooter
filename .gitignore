@@ -4,6 +4,8 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
+
+# Paid Assets
 /Assets/ProCoreBundle*
 /Assets/ProCore*
 /Assets/Plugins/RootMotion*
