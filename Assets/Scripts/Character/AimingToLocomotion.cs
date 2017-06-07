@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviourMachine;
 
+[AddComponentMenu("TPS/Transitions/AimingToLocomotion")]
 public class AimingToLocomotion : StateBehaviour
 {
 	AimingState aiming;

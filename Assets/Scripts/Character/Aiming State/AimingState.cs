@@ -5,7 +5,7 @@ using RootMotion.FinalIK;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(FullBodyBipedIK))]
 [RequireComponent(typeof(AimIK))]
-//[AddComponentMenu("TPS/AimingState")]
+[AddComponentMenu("TPS/States/AimingState")]
 public class AimingState : StateBehaviour
 {
 	#region Debug Fields
@@ -57,8 +57,8 @@ public class AimingState : StateBehaviour
 
 		cameraRig.gameObject.SetActive(true);
 		characterAnimator.SetBool("Aiming", true);
-		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
-		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
+		//characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 1f);
+		//characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 1f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Legs"), 1f);		
 
 		aimingRigAnimator.Play("Vertical Aiming", 0, verticalAngle);
@@ -67,9 +67,9 @@ public class AimingState : StateBehaviour
 		if (aimIK == null) aimIK = GetComponent<AimIK>();
 		if (fbbIK == null) fbbIK = GetComponent<FullBodyBipedIK>();
 		if (lookAtIK == null) lookAtIK = GetComponent<LookAtIK>();
-		aimIK.Disable();
-		fbbIK.Disable();
-		lookAtIK.Disable();
+		aimIK.enabled = false;
+		fbbIK.enabled = false;
+		lookAtIK.enabled = false;
 
 		fbbIK.solver.leftArmChain.bendConstraint.weight = 1f;		
 	}
@@ -79,8 +79,8 @@ public class AimingState : StateBehaviour
 		characterAnimator.SetBool("Aiming", false);
 		cameraRig.gameObject.SetActive(false);
 
-		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 0f);
-		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 0f);
+		//characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Right Hand IK"), 0f);
+		//characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Left Hand IK"), 0f);
 		characterAnimator.SetLayerWeight(characterAnimator.GetLayerIndex("Legs"), 0f);
 	}
 
@@ -90,6 +90,7 @@ public class AimingState : StateBehaviour
 		if ((Cursor.lockState == CursorLockMode.Locked) && !Input.GetMouseButton(1))
 		{
 			SendEvent("TOGGLE_AIMING");
+			return;
 		}
 		#endregion
 

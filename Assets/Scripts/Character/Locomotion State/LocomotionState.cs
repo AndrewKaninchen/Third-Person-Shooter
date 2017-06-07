@@ -5,11 +5,13 @@ using BehaviourMachine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-[AddComponentMenu("TPS/LocomotionState")]
+[AddComponentMenu("TPS/States/LocomotionState")]
 public class LocomotionState : StateBehaviour {
 
 	#region Fields
-	public float moveSpeed = 5f;
+	public float walkSpeed = 1.5f;
+	public float runSpeed = 5f;
+	public float sprintSpeed = 7f;
 	#endregion
 
 	#region Components
@@ -21,6 +23,7 @@ public class LocomotionState : StateBehaviour {
 	private float sprintMultiplier;
 	private float speedMultiplier;
 	private Vector3 inputDir;
+	private bool isRunning = true;
 
 	//[Header("Camera Variables")]
 	[SerializeField] private Transform cameraTransform;
@@ -31,7 +34,7 @@ public class LocomotionState : StateBehaviour {
 
 	private void Start ()
 	{
-		projectedCameraTransform = new GameObject().transform;
+		projectedCameraTransform = new GameObject(gameObject.name + "_LocomotionCameraProjectionOnGround").transform;
 		projectedCameraTransform.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
 	}
 
@@ -61,21 +64,33 @@ public class LocomotionState : StateBehaviour {
 
 		#endregion
 
+		if (Input.GetKeyDown(KeyCode.CapsLock))
+		{
+			isRunning = !isRunning;
+			anim.SetBool("Running", isRunning);
+		}
+
 		var isSprinting = Input.GetKey(KeyCode.LeftShift);
+		anim.SetBool("Sprinting", isSprinting);
+
 		inputDir = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-		speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon)?moveSpeed:0f, Time.deltaTime * 30f);
-		sprintMultiplier = Mathf.MoveTowards(sprintMultiplier, ((isSprinting) ? 2f : 1f), Time.deltaTime * 30f);
+		speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon) ? (isSprinting?(sprintSpeed):(isRunning?runSpeed:walkSpeed)):0f, Time.deltaTime * 10f);
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			anim.SetTrigger("Roll");
+		}
 	}
-	
+
 	private void FixedUpdate()
 	{
 		inputDir.Normalize();
-		projectedCameraTransform.position = new Vector3 (cameraTransform.position.x, 0f, cameraTransform.position.z);		
-		projectedCameraTransform.LookAt(new Vector3 (transform.position.x, 0f, transform.position.z));
+		projectedCameraTransform.position = new Vector3(cameraTransform.position.x, 0f, cameraTransform.position.z);
+		projectedCameraTransform.LookAt(new Vector3(transform.position.x, 0f, transform.position.z));
 		//rb.AddForce(projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed), ForceMode.VelocityChange);
 
 
-		var targetVelocity = projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier * (sprintMultiplier * speedMultiplier / moveSpeed);
+		var targetVelocity = projectedCameraTransform.TransformDirection(inputDir) * speedMultiplier;
 		targetVelocity.y = rb.velocity.y;
 
 		rb.velocity = Vector3.MoveTowards
@@ -88,9 +103,16 @@ public class LocomotionState : StateBehaviour {
 		if (rb.velocity.sqrMagnitude > Mathf.Epsilon)
 		{
 			transform.LookAt(transform.position + new Vector3(rb.velocity.x, 0f, rb.velocity.z), Vector3.up);
+			anim.SetBool("Walking", true);
 		}
+		else
+		{
+			anim.SetBool("Walking", false);
+		}
+
 		anim.SetFloat("MoveVertical", rb.velocity.magnitude, .1f, Time.fixedDeltaTime);
 
+
 		//anim.SetFloat("MoveVertical", speedMultiplier*sprintMultiplier, .1f, Time.fixedDeltaTime);
-	}	
+	}
 }
