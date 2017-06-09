@@ -166,6 +166,7 @@
     <Compile Include="Assets\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
     <Compile Include="Assets\ProCore\ProGroups\Scripts\InScene\GroupContainer.cs" />
     <Compile Include="Assets\ProCore\ProGroups\Scripts\InScene\ProGroups_Util.cs" />
+    <Compile Include="Assets\Rolling.cs" />
     <Compile Include="Assets\Scripts\CameraOrbit.cs" />
     <Compile Include="Assets\Scripts\Character\Aiming State\AimingState.cs" />
     <Compile Include="Assets\Scripts\Character\Aiming State\LookAt.cs" />

@@ -24,6 +24,7 @@ public class LocomotionState : StateBehaviour {
 	private float speedMultiplier;
 	private Vector3 inputDir;
 	private bool isRunning = true;
+	private bool isRolling = false;
 
 	//[Header("Camera Variables")]
 	[SerializeField] private Transform cameraTransform;
@@ -56,30 +57,48 @@ public class LocomotionState : StateBehaviour {
 
 	private void Update ()
 	{
-		#region Check For State Transition Events
-		if(Input.GetMouseButtonDown(1))
+		if (!isRolling)
 		{
-			SendEvent("TOGGLE_AIMING");
+			#region Check For State Transition Events
+			if (Input.GetMouseButtonDown(1))
+			{
+				SendEvent("TOGGLE_AIMING");
+			}
+
+			#endregion
+
+			if (Input.GetKeyDown(KeyCode.CapsLock))
+			{
+				isRunning = !isRunning;
+				anim.SetBool("Running", isRunning);
+			}
+
+			var isSprinting = Input.GetKey(KeyCode.LeftShift);
+			anim.SetBool("Sprinting", isSprinting);
+
+			inputDir = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+			speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon) ? (isSprinting ? (sprintSpeed) : (isRunning ? runSpeed : walkSpeed)) : 0f, Time.deltaTime * 10f);
+
+			if ((inputDir.sqrMagnitude > 0f) && Input.GetKeyDown(KeyCode.Space))
+			{
+				//speedMultiplier = 8f;
+				anim.SetFloat("ArmsLayerWeight", 1f);
+				anim.SetTrigger("Roll");
+				isRolling = true;				
+			}
 		}
 
-		#endregion
-
-		if (Input.GetKeyDown(KeyCode.CapsLock))
+		else
 		{
-			isRunning = !isRunning;
-			anim.SetBool("Running", isRunning);
+			//anim.SetLayerWeight(anim.GetLayerIndex("Arms"), anim.GetFloat("ArmsLayerWeight"));
 		}
 
-		var isSprinting = Input.GetKey(KeyCode.LeftShift);
-		anim.SetBool("Sprinting", isSprinting);
+	}
 
-		inputDir = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-		speedMultiplier = Mathf.MoveTowards(speedMultiplier, (inputDir.sqrMagnitude > Mathf.Epsilon) ? (isSprinting?(sprintSpeed):(isRunning?runSpeed:walkSpeed)):0f, Time.deltaTime * 10f);
-
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			anim.SetTrigger("Roll");
-		}
+	public void StopRolling()
+	{
+		isRolling = false;
+		//anim.SetLayerWeight(anim.GetLayerIndex("Arms"), 1f);
 	}
 
 	private void FixedUpdate()
